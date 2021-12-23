@@ -1,0 +1,58 @@
+const aws = require("aws-sdk")
+const {uploadFile} = require('../aws')
+const jwt = require("jsonwebtoken")
+
+const urlOfProfileImage = async function (req, res, next) {
+    let files = req.files;
+    if (files && files.length > 0) {
+        //upload to s3 and return true..incase of error in uploading this will goto catch block( as rejected promise)
+        let imageUrl = await uploadFile(files[0]); // expect this function to take file as input and give url of uploaded file as output 
+        //res.status(201).send({ status: true, data: uploadedFileURL });
+        req.urlimage = imageUrl
+        next()
+    }
+    else {
+        res.status(400).send({ status: false, msg: "No file to write" });
+    }
+}
+
+const urlOfProfileImageForUpdate = async function (req, res, next) {
+    let files = req.files;
+    if (files && files.length > 0) {
+        //upload to s3 and return true..incase of error in uploading this will goto catch block( as rejected promise)
+        let imageUrl = await uploadFile(files[0]); // expect this function to take file as input and give url of uploaded file as output 
+        //res.status(201).send({ status: true, data: uploadedFileURL });
+        req.urlimage = imageUrl
+        next()
+    }
+    else {
+        next()
+    }
+}
+
+const mid1 = function (req, res, next) {
+    try {
+        let token = req.header('Authorization', 'Bearer Token')
+        token= token.split(' ')
+        console.log(token)
+        if (!token[0] && !token[1]) {
+            return res.status(401).send({ status: false, msg: "no authentication token" })
+        } else {
+            
+            let decodeToken = jwt.decode(token[1], '22nd-Dec-Project-Product')
+            console.log('lne 26' , decodeToken)
+            if (decodeToken) {
+                req.userId = decodeToken.userId
+                next()
+
+            } else {
+                res.status(401).send({ status: false, msg: "not a valid token" })
+            }
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ status: false, msg: error })
+    }
+}
+module.exports = {urlOfProfileImage,urlOfProfileImageForUpdate,mid1}
