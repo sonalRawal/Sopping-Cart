@@ -1,5 +1,4 @@
 const aws = require("aws-sdk");
-const bcrypt = require('bcrypt');
 
 aws.config.update({
   accessKeyId: "AKIAY3L35MCRRMC6253G",  // id
@@ -32,35 +31,6 @@ let uploadFile = async (file) => {
     });
   });
 }
-const hashPassword = async (password, saltRounds = 2) => {
-        // Hash password
-        return await bcrypt.hash(password, saltRounds);  
-    }
 
-module.exports = {uploadFile,hashPassword} ;
 
-// if (!validate.isValid(address.shipping.street)) {
-        //     res.status(400).send({ status: false, message: `street is required` })
-        //     return
-        // }
-        // if (!validate.isValid(address.shipping.city)) {
-        //     res.status(400).send({ status: false, message: `city is required` })
-        //     return
-        // }
-        // if (!(typeof address.shipping.pincode == "number")) {
-        //     res.status(400).send({ status: false, message: `pincode is required` })
-        //     return
-        // }
-        // if (!validate.isValid(address.billing.street)) {
-        //     res.status(400).send({ status: false, message: `street is required` })
-        //     return
-        // }
-        // if (!validate.isValid(address.billing.city)) {
-        //     res.status(400).send({ status: false, message: `city is required` })
-        //     return
-        // }
-        // if (!(typeof address.billing.pincode == "number")) {
-        //     res.status(400).send({ status: false, message: `pincode is required` })
-        //     return
-        // }
-        
+module.exports.uploadFile = uploadFile ;

@@ -5,7 +5,15 @@ const isValid = function (value) {
     if (value.trim().length == 0) { return false } //if user give spaces not any string eg:- "  " =>here this value is empty, only space is there so after trim if it becomes empty than false will be given. 
     if (typeof (value) === 'string' && value.trim().length > 0) { return true } //to check only string is comming and after trim value should be their than only it will be true.
 }
-
+const isValidAvailableSizes = function (availableSizes) {
+    return ["S", "XS","M","X", "L","XXL", "XL"].indexOf(availableSizes.trim()) !== -1
+}
+const isValidCurrencyId = function (currencyId) {
+    return ["INR"].indexOf(currencyId.trim()) !== -1
+}
+const isValidCurrencyFormate = function (currencyFormat) {
+    return ["₹"].indexOf(currencyFormat.trim()) !== -1
+}
 const isValidRequestBody = function (requestBody) {
     return Object.keys(requestBody).length > 0
 }
@@ -32,5 +40,5 @@ const validString = function(value) {
     if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
     return true;
 }
-module.exports = { isValid, isValidRequestBody, validateEmail,isValidObjectId,
-    validatePhone,validString}
+module.exports = { isValid,isValidAvailableSizes,isValidCurrencyId, isValidRequestBody, validateEmail,isValidObjectId,
+    validatePhone,isValidCurrencyFormate,validString}

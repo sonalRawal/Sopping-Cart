@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const userModel = require("../model/userModel")
 const { isValid, isValidRequestBody, validateEmail,isValidObjectId,validatePhone,validString} = require("../validator/validate")
-const aws = require('../aws');
+const encrypt = require('../Encryption/Encrypt');
 const jwt = require("jsonwebtoken")
 
 
@@ -62,7 +62,7 @@ const createUser = async function (req, res) {
             return
         }
 
-        const hashPassword = await aws.hashPassword(password)
+        const hashPassword = await encrypt.hashPassword(password)
         requestBody.password = hashPassword;
         if (!address) {
             res.status(400).send({ status: false, message: `address is required` })
@@ -95,16 +95,10 @@ const createUser = async function (req, res) {
 
         requestBody['profileImage'] = req.urlimage
 
-        let files = req.files;
-        if (files && files.length > 0) {
-            //upload to s3 and return true..incase of error in uploading this will go to catch block( as rejected promise)
-            let uploadedFileURL = await aws.uploadFile(files[0]);
-            if (uploadedFileURL) {
-                requestBody.profileImage = uploadedFileURL
-            }
+        
             const userData = await userModel.create(requestBody)
             res.status(201).send({ status: true, msg: "successfully created", data: userData })
-        }
+        
     } catch (err) {
 
         res.status(500).send({ status: false, msg: err.message })
@@ -218,27 +212,30 @@ const updateUser = async function (req, res) {
         }
         if (isValid(password)) {
             if (password.trim().length > 7 && password.trim().length < 16) {
-                const hashPassword = await aws.hashPassword(password.trim())
+
+                const hashPassword = await encrypt.hashPassword(password.trim())
                 filterQuery['password'] = hashPassword;
+            } else{
+                return res.status(400).send({status: false, message: `password should be between 8 to 15`})
             }
-        }
+            }
         
         if (address) {
             address = JSON.parse(address)
             if (address.shipping) {
-                if ('address.shipping.street') {
+                if (address.shipping.street) {
                     if (!validString(address.shipping.street)) {
                         return res.status(400).send({ status: false, message: ' Please provide street' })
                     }
                     filterQuery['address.shipping.street'] = address.shipping.street
                 }
-                if ('address.shipping.city') {
+                if (address.shipping.city) {
                     if (!validString(address.shipping.city)) {
                         return res.status(400).send({ status: false, message: ' Please provide city' })
                     }
                     filterQuery['address.shipping.city'] = address.shipping.city
                 }
-                if ('address.shipping.pincode') {
+                if (address.shipping.pincode) {
                     if (typeof address.shipping.pincode !== 'number') {
                         return res.status(400).send({ status: false, message: ' Please provide pincode' })
                     }
@@ -247,19 +244,19 @@ const updateUser = async function (req, res) {
             }
 
             if (address.billing) {
-                if ('address.billing.street') {
+                if (address.billing.street) {
                     if (!validString(address.billing.street)) {
                         return res.status(400).send({ status: false, message: ' Please provide street' })
                     }
                     filterQuery['address.billing.street'] = address.billing.street
                 }
-                if ('address.billing.city') {
+                if (address.billing.city) {
                     if (!validString(address.billing.city)) {
                         return res.status(400).send({ status: false, message: ' Please provide city' })
                     }
                     filterQuery['address.billing.city'] = address.billing.city
                 }
-                if ('address.billing.pincode') {
+                if (address.billing.pincode) {
                     if (typeof address.billing.pincode !== 'number') {
                         return res.status(400).send({ status: false, message: ' Please provide pincode' })
                     }
@@ -268,8 +265,9 @@ const updateUser = async function (req, res) {
             }
         }
         filterQuery.profileImage = profileImage;
+
         const userdetails = await userModel.findOneAndUpdate({ userId }, filterQuery, { new: true })
-        return res.status(200).send({ status: true, message: "User profile Details", data: userdetails })
+        return res.status(200).send({ status: true, message: "User updated profile Details", data: userdetails })
     
 } catch (error) {
     res.status(500).send({ status: false, message: error.message })
