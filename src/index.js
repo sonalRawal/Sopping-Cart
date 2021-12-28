@@ -16,7 +16,6 @@ mongoose.connect("mongodb+srv://monty-python:SnYUEY4giV9rekw@functionup-backend-
     .then(() => console.log('mongodb running perfectly on 27017'))
     .catch(err => console.log(err))
     
-
 app.use('/', route);
 
 app.listen(process.env.PORT || 3000, function() {

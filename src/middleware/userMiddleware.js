@@ -31,7 +31,7 @@ const urlOfProfileImageForUpdate = async function (req, res, next) {
     }
 }
 
-const mid1 = function (req, res, next) {
+const authToken = function (req, res, next) {
     try {
         let token = req.header('Authorization', 'Bearer Token')
         token= token.split(' ')
@@ -52,8 +52,8 @@ const mid1 = function (req, res, next) {
         }
 
     } catch (error) {
-        console.log(error)
-        res.status(500).send({ status: false, msg: error })
+        
+        res.status(500).send({ status: false, msg: error.ma})
     }
 }
-module.exports = {urlOfProfileImage,urlOfProfileImageForUpdate,mid1}
+module.exports = {urlOfProfileImage,urlOfProfileImageForUpdate,authToken}

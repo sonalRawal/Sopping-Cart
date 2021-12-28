@@ -5,9 +5,7 @@ const isValid = function (value) {
     if (value.trim().length == 0) { return false } //if user give spaces not any string eg:- "  " =>here this value is empty, only space is there so after trim if it becomes empty than false will be given. 
     if (typeof (value) === 'string' && value.trim().length > 0) { return true } //to check only string is comming and after trim value should be their than only it will be true.
 }
-// const isValidAvailableSizes = function (availableSizes) {
-//     return ["S", "XS","M","X", "L","XXL", "XL"].indexOf(availableSizes.trim()) !== -1
-// }
+
 const validforEnum = function (value) {
     let avilable = ["S", "XS", "M", "X", "L", "XXL", "XL"]
     value = value.split(",")
@@ -18,12 +16,7 @@ const validforEnum = function (value) {
     }
     return true;
 }
-const isValidCurrencyId = function (currencyId) {
-    return ["INR"].indexOf(currencyId.trim()) !== -1
-}
-const isValidCurrencyFormate = function (currencyFormat) {
-    return ["₹"].indexOf(currencyFormat.trim()) !== -1
-}
+
 const isValidRequestBody = function (requestBody) {
     return Object.keys(requestBody).length > 0
 }
@@ -54,5 +47,5 @@ const validPrice = function(price) {
  let curRegExp = /^(?:0|[1-9]\d*)(?:\.(?!.*000)\d+)?$/;
 return curRegExp.test(price)
 }
-module.exports = { isValid,validforEnum,isValidCurrencyId, isValidRequestBody, validateEmail,isValidObjectId,
-    validatePhone,isValidCurrencyFormate,validString,validPrice}
+module.exports = { isValid,validforEnum, isValidRequestBody, validateEmail,isValidObjectId,
+    validatePhone,validString,validPrice}

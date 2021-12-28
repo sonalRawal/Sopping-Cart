@@ -18,7 +18,7 @@ const createProduct = async function (req, res) {
         }
         const isTitleAlreadyUsed = await productModel.findOne({ title: title });
         if (isTitleAlreadyUsed) {
-            res.status(400).send({ status: false, message: `${title} title is already registered`, });
+            res.status(400).send({ status: false, message: `${title} title is already registered` });
             return;
         }
         if (!isValid(description)) {
@@ -66,15 +66,18 @@ const createProduct = async function (req, res) {
                 return
             }
             requestBody.availableSizes = availableSizes.split(",")
-        }       
+        }
+        requestBody.installments =  installments.trim()      
         if(isValid(installments)){
             if(isNaN(installments)){
                 res.status(400).send({ status: false, message: 'plz provide valid installments type number' })
                 return  
             }
         }
+         
         requestBody.productImage = req.urlimage
         const productData = await productModel.create(requestBody)
+        
         res.status(201).send({ status: true, msg: "successfully created", data: productData })
     } catch (err) {
         res.status(500).send({ status: false, msg: err.message })
@@ -133,6 +136,7 @@ const getProduct = async function (req, res) {
                 return res.status(400).send({ status: false, message: ' Please provide priceSort value 1 ||-1' })
             }
         }
+        console.log(query)
         let productsOfQuery = await productModel.find(query).sort({ price: priceSort })
         if (Array.isArray(productsOfQuery) && productsOfQuery.length === 0) {
             return res.status(404).send({ status: false, message: 'No products found' })
@@ -233,6 +237,13 @@ const updateProduct = async function (req, res) {
                 }
                 filterQuery['installments'] = installments
             }
+        }
+        if(isFreeShipping){
+            if(!(isFreeShipping==='true' ||isFreeShipping==='false')){
+                res.status(400).send({ status: false, message: 'isFreeShipping type should be boolean' })
+                return
+            }
+            filterQuery['isFreeShipping'] = isFreeShipping
         }
         filterQuery.productImage = productImage;
         //updating details

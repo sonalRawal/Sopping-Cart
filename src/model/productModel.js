@@ -8,13 +8,13 @@ const productSchema = new mongoose.Schema({
 
     price: {type:Number, required: true},
 
-    currencyId: {type:String, required: true,trim:true},   //INR
+    currencyId: {type:String, required: true},   //INR
 
-    currencyFormat: {type:String, required: true,trim:true} ,    //Rupee symbol, 
+    currencyFormat: {type:String, required: true} ,    //Rupee symbol, 
 
     isFreeShipping: {type:Boolean, default: false},
 
-    productImage: {type:String, required: true,trim:true},  // s3 link
+    productImage: {type:String, required: true},  // s3 link
 
     style: {type:String,trim:true},
     availableSizes: {type:[String] }, //enum:["S", "XS", "M","X", "L","XXL", "XL"]},
