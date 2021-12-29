@@ -34,6 +34,9 @@ const urlOfProfileImageForUpdate = async function (req, res, next) {
 const authToken = function (req, res, next) {
     try {
         let token = req.header('Authorization', 'Bearer Token')
+        if(!token){
+            return res.status(401).send({ status: false, msg: "missing authentication token" })
+        }
         token= token.split(' ')
         console.log(token)
         if (!token[0] && !token[1]) {
@@ -51,9 +54,9 @@ const authToken = function (req, res, next) {
             }
         }
 
-    } catch (error) {
-        
-        res.status(500).send({ status: false, msg: error.ma})
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({ status: false, msg: err.message})
     }
 }
 module.exports = {urlOfProfileImage,urlOfProfileImageForUpdate,authToken}
