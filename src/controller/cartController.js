@@ -103,7 +103,7 @@ const getCart = async function (req, res) {
         const cartDetails = await cartModel.findOne({ userId: userId }); // check for cart existance
 
         if (cartDetails.totalPrice === 0 && cartDetails.totalItems === 0) {
-            return res.status(500).send({ status: false, message: 'cart not exist' })
+            return res.status(200).send({ status: false, message: 'cart not exist' })
         };
 
         //for product details 
@@ -121,7 +121,7 @@ const getCart = async function (req, res) {
          
          responseData['productDetails'] = productDetails;  //making one more field for product details
 
-        res.status(500).send({ status: true, message: 'Cart summary', data: responseData})//, productDetails}});
+        res.status(200).send({ status: true, message: 'Cart summary', data: responseData})//, productDetails}});
 
 
     } catch (error) {
