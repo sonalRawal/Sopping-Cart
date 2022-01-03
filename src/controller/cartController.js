@@ -103,7 +103,7 @@ const getCart = async function (req, res) {
         const cartDetails = await cartModel.findOne({ userId: userId }); // check for cart existance
 
         if (cartDetails.totalPrice === 0 && cartDetails.totalItems === 0) {
-            return res.status(500).send({ status: false, message: 'cart not exist' })
+            return res.status(400).send({ status: false, message: 'cart not exist' })
         };
 
         //for product details 
@@ -121,7 +121,7 @@ const getCart = async function (req, res) {
          
          responseData['productDetails'] = productDetails;  //making one more field for product details
 
-        res.status(500).send({ status: true, message: 'Cart summary', data: responseData})//, productDetails}});
+        res.status(200).send({ status: true, message: 'Cart summary', data: responseData})//, productDetails}});
 
 
     } catch (error) {
@@ -219,7 +219,7 @@ const deleteCart = async function(req,res){
 
         const deletedCart = await cartModel.findOneAndUpdate({userId:userId},{items:[],totalPrice:0,totalItems:0},{new:true})
         if(deletedCart){
-        res.status(200).send({status:true,msg:"This cart has been succesfully deleted",data:deletedCart})
+        res.status(200).send({status:true,msg:"This cart has been succesfully deleted"})
         return
     }
         res.status(404).send({ status: false, message: `cart alredy deleted not found`})

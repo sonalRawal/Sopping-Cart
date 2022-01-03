@@ -22,11 +22,10 @@ let uploadFile = async (file) => {
 
     // Callback - function provided as the second parameter ( most oftenly)
     s3.upload(uploadParams , function (err, data) {
-      if (err) {
+     if (err) {
         return reject( { "error": err });
       }
-      
-      //console.log(`File uploaded successfully. ${data.Location}`);
+      console.log(`File uploaded successfully. ${data.Location}`);
       return resolve(data.Location); 
     });
   });

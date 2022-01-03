@@ -26,19 +26,17 @@ const createOrder = async function (req, res) {
             res.status(400).send({ status: false, message: `Request body should not be empty` })
             return
         }
-        let { cartId, cancellable, status } = req.body
+        let { items,totalItems,totalPrice, cancellable, status } = req.body
         let quantityCollection = [];
-        const cartDetails = await cartModel.findOne({ _id: cartId });
-
-        if(!cartDetails){
-           return res.status(404).send({ status: false, msg:"please provide correct cartId" })
-        }
         if(status){
         if(!validforStatus(status)){
             return res.status(400).send({ status: false, msg:"please provide correct status" })
         }
     }
-        for (let product of cartDetails.items) {
+    if (cancellable == false && status == "cancled") {
+        return res.status(400).send({ status: false, msg: "You can not cancle Non-cancellable order" })
+    }
+        for (let product of items) {
             quantityCollection.push(product.quantity)
         }
         let totalQuantity = quantityCollection.reduce(function (a, b) {
@@ -47,9 +45,9 @@ const createOrder = async function (req, res) {
 
         const orderDetails = {
             userId: userId,
-            items: cartDetails.items,
-            totalPrice: cartDetails.totalPrice,
-            totalItems: cartDetails.totalItems,
+            items: items,
+            totalPrice: totalPrice,
+            totalItems: totalItems,
             totalQuantity: totalQuantity,
             cancellable: cancellable,
             status: status
@@ -90,6 +88,11 @@ const updateOrder = async function (req, res) {
             res.status(404).send({ status: false, message: `order not found` })
             return
         }
+        // status key can not be changed after cancled or completed
+        if(!(order.status =="pending")){
+            res.status(404).send({ status: false, message: "can't change status of alredy completed or cancled order" })
+            return
+        } 
         if(!validforStatus(status)){
             return  res.status(400).send({ status: false, msg:"please provide correct status" })
         }

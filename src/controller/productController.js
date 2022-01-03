@@ -186,7 +186,7 @@ const updateProduct = async function (req, res) {
             return
         }
         //filter
-        let { title, description, price, currencyId, currencyFormat, style, availableSizes, installments } = requestBody
+        let { title, description, price, currencyId, currencyFormat, style, availableSizes, isFreeShipping,installments } = requestBody
         const productImage = req.urlimage
         const filterQuery = {};
         if (isValid(title)) {

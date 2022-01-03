@@ -9,7 +9,7 @@ const createUser = async function (req, res) {
 
     try {
         const requestBody = req.body;
-        const { fname, lname, profileImage, phone, email, password, address } = requestBody
+        const { fname, lname, phone, email, password, address } = requestBody
         //console.log("hlo", req.body)
         if (!isValidRequestBody(requestBody)) {
             res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide author details' })
@@ -156,6 +156,10 @@ const loginUser = async function (req, res) {
 // get user profile by user id
 const getUserProfileById = async function (req, res) {
     try {
+        const userId = req.params.userId
+        if (!isValidObjectId(userId)) {
+            return res.status(404).send({ status: false, message: "userId is not valid" })
+        }
         let userDetail = await userModel.findOne({ _id: req.params.userId })
 
         if (!userDetail) {
